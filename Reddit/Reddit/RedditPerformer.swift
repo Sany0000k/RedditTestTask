@@ -14,37 +14,51 @@ class RedditPerformer
 {
 	func getTop(fromNumber: UInt = 0, limit: UInt = 25,  completion: @escaping RedditLinkGetterCompletion)
 	{
-		let url = URL(string: "https://reddit.com/r/ios/top.json?limit=\(limit)&count=\(fromNumber)")!
-		let session = URLSession.shared
-		let task = session.dataTask(with: url)
-		{ data, response, error in
-			guard let data = data, error == nil else
+		let completionOnMainThread: RedditLinkGetterCompletion =
+		{ (arrayOfLinks, error) -> () in
+			
+			DispatchQueue.main.async()
 			{
-				completion(nil, error)
-				return
+				completion(arrayOfLinks, error)
 			}
 			
-			do
-			{
-				if let jsonObj = try JSONSerialization.jsonObject(with: data, options:.allowFragments) as? [String : Any]
-				{
-					if let childrenJson = (jsonObj as NSDictionary).value(forKeyPath: "data.children.data") as? [[String: Any]]
-					{
-						let result = childrenJson.map(
-						{(json) -> RedditLink in
-							return RedditLink(json: json)
-						})
-						
-						completion(result, nil)
-					}
-				}
-			}
-			catch let jsonParseError
-			{
-				completion(nil, jsonParseError)
-			}
 		}
 		
-		task.resume()
+		DispatchQueue.global(qos: .userInitiated).async
+		{
+			let url = URL(string: "https://reddit.com/r/ios/top.json?limit=\(limit)&count=\(fromNumber)")!
+			let session = URLSession.shared
+			let task = session.dataTask(with: url)
+			{ data, response, error in
+				
+				guard let data = data, error == nil else
+				{
+					completionOnMainThread(nil, error)
+					return
+				}
+				
+				do
+				{
+					if let jsonObj = try JSONSerialization.jsonObject(with: data, options:.allowFragments) as? [String : Any]
+					{
+						if let childrenJson = (jsonObj as NSDictionary).value(forKeyPath: "data.children.data") as? [[String: Any]]
+						{
+							let result = childrenJson.map(
+							{(json) -> RedditLink in
+								return RedditLink(json: json)
+							})
+							
+							completionOnMainThread(result, nil)
+						}
+					}
+				}
+				catch let jsonParseError
+				{
+					completionOnMainThread(nil, jsonParseError)
+				}
+			}
+			
+			task.resume()
+		}
 	}
 }
