@@ -22,13 +22,17 @@ class RedditLinkCell: UITableViewCell
 		didSet
 		{
 			titleLabel?.text = redditLink?.title
-			authorLabel?.text = redditLink?.author
+			let author = redditLink?.author ?? ""
+			authorLabel?.text = "author: \(author)"
 			
 			thumbnailImageView?.image = nil
 			
 			if let thumbnailURLString = redditLink?.thumbnail, let thumbnailURL = URL(string: thumbnailURLString)
 			{
-				downloadImage(url: thumbnailURL)
+				Util().downloadImage(url: thumbnailURL)
+				{ (image, nil) in
+					self.thumbnailImageView?.image = image
+				}
 			}
 			
 			let numberOfComments = redditLink?.numberOfComments ?? 0
@@ -36,28 +40,7 @@ class RedditLinkCell: UITableViewCell
 		}
 	}
 	
-	func getDataFromUrl(url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ())
-	{
-		URLSession.shared.dataTask(with: url)
-		{ data, response, error in
-			
-			completion(data, response, error)
-		}.resume()
-	}
 	
-	func downloadImage(url: URL)
-	{
-		getDataFromUrl(url: url)
-		{ data, response, error in
-			guard let data = data, error == nil else { return }
-			print(response?.suggestedFilename ?? url.lastPathComponent)
-			
-			DispatchQueue.main.async()
-			{
-				self.thumbnailImageView?.image = UIImage(data: data)
-			}
-		}
-	}
 	
 	override func awakeFromNib()
 	{

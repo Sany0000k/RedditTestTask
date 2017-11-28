@@ -30,6 +30,8 @@ class RedditLinksController: UIViewController, UITableViewDelegate, UITableViewD
 	}
 	
 	var redditLinks: Array<RedditLink>?
+	var selectedIndex: Int?
+	
 	
 	override func viewDidLoad()
 	{
@@ -41,6 +43,18 @@ class RedditLinksController: UIViewController, UITableViewDelegate, UITableViewD
 		getLinksForCurrentPage()
 		
 		currentPage = 0
+	}
+	
+	override func prepare(for segue: UIStoryboardSegue, sender: Any?)
+	{
+		super.prepare(for: segue, sender: sender)
+		if let previewController = segue.destination as? PreviewController
+		{
+			if let selectedIndex = selectedIndex
+			{
+				previewController.redditLink = redditLinks![selectedIndex]
+			}
+		}
 	}
 	
 	func updateButtons()
@@ -92,6 +106,20 @@ class RedditLinksController: UIViewController, UITableViewDelegate, UITableViewD
 		}
 		
 		return cell
+	}
+	
+	// MARK: - UITableViewDelegate
+	
+	public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath)
+	{
+		tableView.deselectRow(at: indexPath, animated: true)
+		selectedIndex = currentPage * numberOfLinksPerPage + indexPath.row
+		
+		if redditLinks![selectedIndex!].image != nil
+		{
+			performSegue(withIdentifier: "ShowPreviewSegueID", sender: self)
+		}
+		selectedIndex = nil
 	}
 	
 	// MARK: - IBActions

@@ -12,7 +12,6 @@ let titleKey = "title"
 let authorKey = "author"
 let entryDateKey = ""
 let thumbnailKey = "thumbnail"
-let imageKey = ""
 let numberOfCommentsKey = "num_comments"
 
 class RedditLink
@@ -30,7 +29,16 @@ class RedditLink
 		author = json[authorKey] as? String
 		entryDate = json[entryDateKey] as? NSDate
 		thumbnail = json[thumbnailKey] as? String
-		image = json[imageKey] as? String
+		
 		numberOfComments = json[numberOfCommentsKey] as? Int
+		
+		if let imageURLs = (json as NSDictionary).value(forKeyPath: "preview.images.source.url") as? Array<String>
+		{
+			image = imageURLs[0]
+		}
+		else
+		{
+			image = nil
+		}
 	}
 }
