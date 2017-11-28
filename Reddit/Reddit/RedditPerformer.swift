@@ -12,7 +12,7 @@ typealias RedditLinkGetterCompletion = ([RedditLink]?, Error?) -> ()
 
 class RedditPerformer
 {
-	func getTop(fromNumber: UInt = 0, limit: UInt = 25,  completion: @escaping RedditLinkGetterCompletion)
+	func getTop(limit: UInt = 100,  completion: @escaping RedditLinkGetterCompletion)
 	{
 		let completionOnMainThread: RedditLinkGetterCompletion =
 		{ (arrayOfLinks, error) -> () in
@@ -26,7 +26,7 @@ class RedditPerformer
 		
 		DispatchQueue.global(qos: .userInitiated).async
 		{
-			let url = URL(string: "https://reddit.com/r/ios/top.json?limit=\(limit)&count=\(fromNumber)")!
+			let url = URL(string: "https://reddit.com/r/ios/top.json?limit=\(limit)")!
 			let session = URLSession.shared
 			let task = session.dataTask(with: url)
 			{ data, response, error in

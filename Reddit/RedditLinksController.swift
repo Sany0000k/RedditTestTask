@@ -10,6 +10,7 @@ import UIKit
 
 var RedditLinkCellID = "RedditLinkCellID"
 var estimatedRowHeight = 171
+var numberOfLinksPerPage = 10
 
 class RedditLinksController: UIViewController, UITableViewDelegate, UITableViewDataSource
 {
@@ -17,6 +18,16 @@ class RedditLinksController: UIViewController, UITableViewDelegate, UITableViewD
 	@IBOutlet weak var previousLinksButton: UIButton?
 	@IBOutlet weak var nextLinksButton: UIButton?
 	@IBOutlet weak var homeButton: UIButton?
+	
+	var currentPage: Int = 0
+	{
+		didSet
+		{
+			updateButtons()
+			
+			self.tableView?.reloadData()
+		}
+	}
 	
 	var redditLinks: Array<RedditLink>?
 	
@@ -27,11 +38,26 @@ class RedditLinksController: UIViewController, UITableViewDelegate, UITableViewD
 		tableView?.rowHeight = UITableViewAutomaticDimension
 		tableView?.estimatedRowHeight = 171
 		
-		RedditPerformer().getTop(fromNumber: 0, limit: 20)
+		getLinksForCurrentPage()
+		
+		currentPage = 0
+	}
+	
+	func updateButtons()
+	{
+		previousLinksButton?.isEnabled = !(0 == currentPage)
+		let numberOfLinks = redditLinks?.count ?? 0
+		nextLinksButton?.isEnabled = numberOfLinks > (currentPage + 1) * numberOfLinksPerPage
+	}
+	
+	func getLinksForCurrentPage()
+	{
+		RedditPerformer().getTop()
 		{ (receivedLinks, nil) in
 			
 			self.redditLinks = receivedLinks
 			self.tableView?.reloadData()
+			self.updateButtons()
 		}
 	}
 
@@ -39,7 +65,17 @@ class RedditLinksController: UIViewController, UITableViewDelegate, UITableViewD
 	
 	func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int
 	{
-		return redditLinks?.count ?? 0;
+		let result: Int
+		let numberOfLinks = redditLinks?.count ?? 0
+		if (currentPage + 1) * numberOfLinksPerPage > numberOfLinks
+		{
+			result = numberOfLinks	 % numberOfLinksPerPage
+		}
+		else
+		{
+			result = numberOfLinksPerPage
+		}
+		return result;
 	}
 	
 	
@@ -48,14 +84,35 @@ class RedditLinksController: UIViewController, UITableViewDelegate, UITableViewD
 	{
 		let cell = tableView.dequeueReusableCell(withIdentifier: RedditLinkCellID, for: indexPath) as! RedditLinkCell
 		
-		if let redditLinks = redditLinks
+		let index = indexPath.row + (currentPage * numberOfLinksPerPage)
+		
+		if let redditLinks = redditLinks, redditLinks.count > index
 		{
-			cell.redditLink = redditLinks[indexPath.row]
+			cell.redditLink = redditLinks[index]
 		}
 		
 		return cell
 	}
-
+	
+	// MARK: - IBActions
+	
+	@IBAction func showPrevious(sender: UIButton)
+	{
+		if currentPage > 0
+		{
+			currentPage -= 1
+		}
+	}
+	
+	@IBAction func showHome(sender: UIButton)
+	{
+		currentPage = 0
+	}
+	
+	@IBAction func showNext(sender: UIButton)
+	{
+		currentPage += 1
+	}
 
 }
 

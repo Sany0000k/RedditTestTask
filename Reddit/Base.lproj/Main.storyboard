@@ -95,9 +95,38 @@
                             </tableView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="a8U-tA-GOb">
                                 <rect key="frame" x="0.0" y="590" width="375" height="77"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mAP-UC-E6P">
+                                        <rect key="frame" x="21" y="23" width="46" height="30"/>
+                                        <state key="normal" title="&lt;&lt;"/>
+                                        <connections>
+                                            <action selector="showPreviousWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="xjX-Fa-KjX"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OCA-UA-saJ">
+                                        <rect key="frame" x="164" y="23" width="46" height="30"/>
+                                        <state key="normal" title="∆"/>
+                                        <connections>
+                                            <action selector="showHomeWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="M9Z-Tp-HiX"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XuN-a1-nM2">
+                                        <rect key="frame" x="321" y="23" width="46" height="30"/>
+                                        <state key="normal" title="&gt;&gt;"/>
+                                        <connections>
+                                            <action selector="showNextWithSender:" destination="BYZ-38-t0r" eventType="touchUpInside" id="t0T-PF-thv"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="0.90980392160000001" green="0.93333333330000001" blue="0.93725490199999995" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
+                                    <constraint firstItem="XuN-a1-nM2" firstAttribute="centerY" secondItem="a8U-tA-GOb" secondAttribute="centerY" id="1T2-Fk-j2a"/>
                                     <constraint firstAttribute="height" constant="77" id="7Vb-Dj-XpZ"/>
+                                    <constraint firstItem="OCA-UA-saJ" firstAttribute="centerY" secondItem="a8U-tA-GOb" secondAttribute="centerY" id="CCe-pS-pIa"/>
+                                    <constraint firstItem="mAP-UC-E6P" firstAttribute="centerY" secondItem="a8U-tA-GOb" secondAttribute="centerY" id="E3Y-Hf-Nqp"/>
+                                    <constraint firstItem="mAP-UC-E6P" firstAttribute="leading" secondItem="a8U-tA-GOb" secondAttribute="leading" constant="21" id="S89-Iy-BZV"/>
+                                    <constraint firstAttribute="trailing" secondItem="XuN-a1-nM2" secondAttribute="trailing" constant="8" id="fhj-fj-9ix"/>
+                                    <constraint firstItem="OCA-UA-saJ" firstAttribute="centerX" secondItem="a8U-tA-GOb" secondAttribute="centerX" id="tZk-sz-yF1"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -114,12 +143,29 @@
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
+                        <outlet property="homeButton" destination="OCA-UA-saJ" id="Mbp-GR-hzc"/>
+                        <outlet property="nextLinksButton" destination="XuN-a1-nM2" id="hl0-Pg-18p"/>
+                        <outlet property="previousLinksButton" destination="mAP-UC-E6P" id="k2A-ot-ODM"/>
                         <outlet property="tableView" destination="JQg-Tx-6fp" id="nzn-O5-kRS"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="136.80000000000001" y="132.68365817091455"/>
+        </scene>
+        <!--View Controller-->
+        <scene sceneID="zFB-lg-UVX">
+            <objects>
+                <viewController id="IT4-i4-vgP" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="cd7-19-BQq">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="oTB-ni-jKs"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="qD7-9l-QY6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
         </scene>
     </scenes>
 </document>
