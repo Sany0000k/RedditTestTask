@@ -20,8 +20,8 @@ class RedditLink
 	let title: String?
 	let author: String?
 	let entryDate: NSDate?
-	let thumbnail: NSString?
-	let image: NSString?
+	let thumbnail: String?
+	let image: String?
 	let numberOfComments: Int?
 
 	init(json: Dictionary<String, Any>)
@@ -29,8 +29,8 @@ class RedditLink
 		title = json[titleKey] as? String
 		author = json[authorKey] as? String
 		entryDate = json[entryDateKey] as? NSDate
-		thumbnail = json[thumbnailKey] as? NSString
-		image = json[imageKey] as? NSString
+		thumbnail = json[thumbnailKey] as? String
+		image = json[imageKey] as? String
 		numberOfComments = json[numberOfCommentsKey] as? Int
 	}
 }

@@ -24,8 +24,38 @@ class RedditLinkCell: UITableViewCell
 			titleLabel?.text = redditLink?.title
 			authorLabel?.text = redditLink?.author
 			
+			thumbnailImageView?.image = nil
+			
+			if let thumbnailURLString = redditLink?.thumbnail, let thumbnailURL = URL(string: thumbnailURLString)
+			{
+				downloadImage(url: thumbnailURL)
+			}
+			
 			let numberOfComments = redditLink?.numberOfComments ?? 0
 			numberOfCommentsLabel?.text = "#\(numberOfComments)"
+		}
+	}
+	
+	func getDataFromUrl(url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ())
+	{
+		URLSession.shared.dataTask(with: url)
+		{ data, response, error in
+			
+			completion(data, response, error)
+		}.resume()
+	}
+	
+	func downloadImage(url: URL)
+	{
+		getDataFromUrl(url: url)
+		{ data, response, error in
+			guard let data = data, error == nil else { return }
+			print(response?.suggestedFilename ?? url.lastPathComponent)
+			
+			DispatchQueue.main.async()
+			{
+				self.thumbnailImageView?.image = UIImage(data: data)
+			}
 		}
 	}
 	
